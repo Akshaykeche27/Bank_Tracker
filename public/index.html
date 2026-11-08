@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17243b" />
+  <title>LeadFlow — Daily Lead & Follow-up Manager</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <a class="brand" href="#dashboard" aria-label="LeadFlow home">
+        <span class="brand-mark">L</span>
+        <span><strong>LeadFlow</strong><small>Daily work manager</small></span>
+      </a>
+
+      <div class="nav-caption">WORKSPACE</div>
+      <nav class="side-nav">
+        <button class="nav-item active" data-view="dashboard" type="button">
+          <span class="nav-icon">◫</span><span>Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="leads" type="button">
+          <span class="nav-icon">▤</span><span>Lead register</span>
+          <span class="nav-count" id="navLeadCount">0</span>
+        </button>
+        <button class="nav-item" data-view="followups" type="button">
+          <span class="nav-icon">◷</span><span>Follow-ups</span>
+          <span class="nav-count alert-count" id="navDueCount">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="tip-card">
+          <span class="tip-icon">✦</span>
+          <strong>Stay on top of every lead</strong>
+          <p>Record each conversation and set the next follow-up before moving on.</p>
+        </div>
+        <div class="sidebar-foot"><span class="online-dot"></span> Local workspace</div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">L</span><strong>LeadFlow</strong></div>
+        <div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong id="pageName">Dashboard</strong></div>
+        <div class="top-actions">
+          <label class="global-search" aria-label="Search leads">
+            <span>⌕</span><input id="globalSearch" type="search" placeholder="Search customer or phone" />
+            <kbd>⌘ K</kbd>
+          </label>
+          <button class="button button-primary top-new-button" id="openNewLead" type="button"><span>＋</span> New lead</button>
+        </div>
+      </header>
+
+      <div class="content-wrap">
+        <section class="view active" id="dashboardView">
+          <div class="page-heading">
+            <div><p class="eyebrow" id="todayLabel">DAILY OVERVIEW</p><h1>Good morning<span class="heading-period">.</span></h1><p class="page-subtitle">A clear view of your leads and the follow-ups that need attention.</p></div>
+            <div class="date-chip"><span class="date-dot"></span><span id="todayDate">Today</span></div>
+          </div>
+
+          <div class="stats-grid">
+            <button class="stat-card stat-highlight" data-stat-filter="today" type="button">
+              <span class="stat-top"><span>Follow-ups today</span><span class="stat-symbol">◷</span></span>
+              <strong id="statToday">—</strong><small>Pending actions for today</small>
+            </button>
+            <button class="stat-card" data-stat-filter="overdue" type="button">
+              <span class="stat-top"><span>Overdue follow-ups</span><span class="stat-symbol stat-warn">!</span></span>
+              <strong id="statOverdue">—</strong><small>Need your attention</small>
+            </button>
+            <button class="stat-card" data-stat-filter="all" type="button">
+              <span class="stat-top"><span>Active leads</span><span class="stat-symbol">▤</span></span>
+              <strong id="statLeads">—</strong><small>Open customer opportunities</small>
+            </button>
+            <button class="stat-card" data-stat-filter="leads-interested" type="button">
+              <span class="stat-top"><span>Interested customers</span><span class="stat-symbol stat-good">↗</span></span>
+              <strong id="statInterested">—</strong><small>Leads showing interest</small>
+            </button>
+          </div>
+
+          <div class="dashboard-grid">
+            <section class="panel today-panel">
+              <div class="panel-heading">
+                <div><div class="section-kicker">YOUR PRIORITIES</div><h2>Today's follow-ups</h2></div>
+                <button class="text-button" data-go-followups="today" type="button">View all <span>→</span></button>
+              </div>
+              <div id="dashboardFollowups" class="compact-list" aria-live="polite">
+                <div class="loading-state">Loading today's work…</div>
+              </div>
+            </section>
+
+            <section class="panel quick-panel">
+              <div class="panel-heading"><div><div class="section-kicker">QUICK ACTION</div><h2>Keep work moving</h2></div></div>
+              <button class="quick-action" id="quickAddLead" type="button"><span class="quick-icon quick-blue">＋</span><span><strong>Add a new lead</strong><small>Save customer details and requirements</small></span><b>→</b></button>
+              <button class="quick-action" data-go-followups="overdue" type="button"><span class="quick-icon quick-amber">◷</span><span><strong>Clear overdue follow-ups</strong><small>Review callbacks you have missed</small></span><b>→</b></button>
+              <button class="quick-action" data-go-view="leads" type="button"><span class="quick-icon quick-green">▤</span><span><strong>Open lead register</strong><small>Find a customer and check history</small></span><b>→</b></button>
+              <div class="workflow-note"><span>◎</span><p><strong>Simple workflow</strong><br />Add lead → schedule callback → record result → schedule the next step.</p></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="leadsView">
+          <div class="page-heading page-heading-row">
+            <div><p class="eyebrow">CUSTOMER PIPELINE</p><h1>Lead register<span class="heading-period">.</span></h1><p class="page-subtitle">All your customer requirements and conversations in one place.</p></div>
+            <button class="button button-primary" id="leadPageNew" type="button"><span>＋</span> Add lead</button>
+          </div>
+          <section class="panel register-panel">
+            <div class="register-toolbar">
+              <div><h2>All leads <span class="soft-count" id="leadResultCount">0</span></h2><p>Search by customer name, phone, purpose or location.</p></div>
+              <div class="toolbar-controls">
+                <label class="search-input"><span>⌕</span><input id="leadSearch" type="search" placeholder="Search leads…" /></label>
+                <select id="leadStatusFilter" aria-label="Filter leads by status"><option value="">All statuses</option><option>New</option><option>Interested</option><option>Follow-up</option><option>Converted</option><option>Not Interested</option></select>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="lead-table">
+                <thead><tr><th>CUSTOMER</th><th>PURPOSE / REQUIREMENT</th><th>SOURCE</th><th>STATUS</th><th>LAST REMARK</th><th></th></tr></thead>
+                <tbody id="leadTableBody"><tr><td colspan="6" class="loading-state">Loading leads…</td></tr></tbody>
+              </table>
+            </div>
+            <div class="table-footer"><span id="leadTableFooter">Showing saved leads</span><span class="table-tip">Select a customer to see full history</span></div>
+          </section>
+        </section>
+
+        <section class="view" id="followupsView">
+          <div class="page-heading page-heading-row">
+            <div><p class="eyebrow">CALLBACK PLANNER</p><h1>Follow-ups<span class="heading-period">.</span></h1><p class="page-subtitle">A date-wise action list, so no interested customer gets missed.</p></div>
+            <div class="date-filter-wrap"><label for="followupDate">Choose date</label><input id="followupDate" type="date" /></div>
+          </div>
+          <section class="panel followup-panel">
+            <div class="followup-toolbar">
+              <div class="filter-tabs" role="tablist" aria-label="Follow-up filters">
+                <button class="filter-tab active" data-filter="today" role="tab" aria-selected="true" type="button">Today <span id="todayTabCount">0</span></button>
+                <button class="filter-tab" data-filter="overdue" role="tab" aria-selected="false" type="button">Overdue <span id="overdueTabCount">0</span></button>
+                <button class="filter-tab" data-filter="upcoming" role="tab" aria-selected="false" type="button">Upcoming</button>
+                <button class="filter-tab" data-filter="completed" role="tab" aria-selected="false" type="button">Completed</button>
+                <button class="filter-tab" data-filter="all" role="tab" aria-selected="false" type="button">All pending</button>
+              </div>
+              <span class="list-count" id="followupListCount">0 items</span>
+            </div>
+            <div id="followupList" class="followup-list" aria-live="polite"><div class="loading-state">Loading follow-ups…</div></div>
+          </section>
+        </section>
+
+        <footer class="app-footer"><span>LeadFlow <span class="footer-dot">·</span> Daily lead & follow-up manager</span><span>Keep every next step clear.</span></footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- New lead modal -->
+  <div class="modal-backdrop" id="leadModal" aria-hidden="true">
+    <section class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle">
+      <div class="modal-heading"><div><p class="eyebrow">CUSTOMER DETAILS</p><h2 id="leadModalTitle">Add a new lead</h2><p>Save the requirement and decide when to contact them next.</p></div><button class="icon-button" data-close-modal="leadModal" type="button" aria-label="Close">×</button></div>
+      <form id="leadForm">
+        <div class="form-grid">
+          <label class="field"><span>Customer name <i>*</i></span><input name="name" required maxlength="100" placeholder="Enter full name" /></label>
+          <label class="field"><span>Phone number <i>*</i></span><input name="phone" required maxlength="20" inputmode="tel" placeholder="Enter phone number" /></label>
+          <label class="field"><span>Location</span><input name="location" maxlength="120" placeholder="Village / area" /></label>
+          <label class="field"><span>Purpose / requirement <i>*</i></span><input name="purpose" required maxlength="120" placeholder="e.g. Business loan, Agri loan" /></label>
+          <label class="field"><span>Requirement amount (₹)</span><input name="requirementAmount" type="number" min="0" step="1000" placeholder="e.g. 500000" /></label>
+          <label class="field"><span>Lead source</span><select name="source"><option>DB Calling</option><option>Visit</option><option>Reference</option><option>Other</option></select></label>
+          <label class="field"><span>Current status</span><select name="status"><option value="New">New</option><option value="Interested">Interested</option><option value="Follow-up">Follow-up</option><option value="Converted">Converted</option><option value="Not Interested">Not Interested</option></select></label>
+          <label class="field"><span>Next follow-up type</span><select name="nextFollowUpType"><option>Call</option><option>Visit</option><option>Other</option></select></label>
+          <label class="field field-full"><span>Call remark</span><textarea name="initialRemark" rows="3" maxlength="1000" placeholder="What did the customer say? Add a short note…"></textarea></label>
+          <div class="field field-full followup-schedule-box"><div class="schedule-title"><span class="schedule-icon">◷</span><span><strong>Schedule next follow-up</strong><small>Optional — set the date and time if the customer asks you to call later.</small></span></div><label class="field"><span>Follow-up date & time</span><input name="nextFollowUpAt" type="datetime-local" /></label></div>
+        </div>
+        <div class="form-message" id="leadFormMessage" role="alert"></div>
+        <div class="modal-actions"><button class="button button-quiet" data-close-modal="leadModal" type="button">Cancel</button><button class="button button-primary" id="saveLeadButton" type="submit">Save lead <span>→</span></button></div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Lead detail modal -->
+  <div class="modal-backdrop" id="detailModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <div class="modal-heading"><div><p class="eyebrow">LEAD PROFILE</p><h2 id="detailTitle">Customer details</h2><p id="detailSubtitle"></p></div><button class="icon-button" data-close-modal="detailModal" type="button" aria-label="Close">×</button></div>
+      <div id="leadDetailsContent"></div>
+      <div class="modal-actions detail-actions"><button class="button button-quiet" data-close-modal="detailModal" type="button">Close</button><button class="button button-primary" id="detailScheduleButton" type="button">＋ Schedule follow-up</button></div>
+    </section>
+  </div>
+
+  <!-- Schedule follow-up modal -->
+  <div class="modal-backdrop" id="scheduleModal" aria-hidden="true">
+    <section class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="scheduleTitle">
+      <div class="modal-heading"><div><p class="eyebrow">PLAN THE NEXT CONTACT</p><h2 id="scheduleTitle">Schedule follow-up</h2><p id="scheduleSubtitle">Choose a date and time.</p></div><button class="icon-button" data-close-modal="scheduleModal" type="button" aria-label="Close">×</button></div>
+      <form id="scheduleForm">
+        <label class="field"><span>Follow-up date & time <i>*</i></span><input name="dueAt" type="datetime-local" required /></label>
+        <label class="field"><span>Contact type</span><select name="type"><option>Call</option><option>Visit</option><option>Other</option></select></label>
+        <label class="field"><span>Note</span><textarea name="remark" rows="3" maxlength="1000" placeholder="e.g. Customer asked to call after 3 days"></textarea></label>
+        <div class="form-message" id="scheduleMessage" role="alert"></div>
+        <div class="modal-actions"><button class="button button-quiet" data-close-modal="scheduleModal" type="button">Cancel</button><button class="button button-primary" type="submit">Save follow-up</button></div>
+      </form>
+    </section>
+  </div>
+
+  <!-- Complete follow-up modal -->
+  <div class="modal-backdrop" id="completeModal" aria-hidden="true">
+    <section class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="completeTitle">
+      <div class="modal-heading"><div><p class="eyebrow">UPDATE CUSTOMER CONTACT</p><h2 id="completeTitle">Log follow-up result</h2><p id="completeSubtitle">Record what happened on the call.</p></div><button class="icon-button" data-close-modal="completeModal" type="button" aria-label="Close">×</button></div>
+      <form id="completeForm">
+        <label class="field"><span>Call result <i>*</i></span><select name="outcome" required><option value="Interested">Interested</option><option value="Call Back">Asked to call back</option><option value="No Answer">No answer</option><option value="Not Interested">Not interested</option><option value="Converted">Converted</option><option value="Other">Other</option></select></label>
+        <label class="field"><span>Remark / conversation summary</span><textarea name="remark" rows="3" maxlength="1000" placeholder="Add the customer's response…"></textarea></label>
+        <div class="followup-schedule-box compact-schedule"><div class="schedule-title"><span class="schedule-icon">◷</span><span><strong>Set another follow-up</strong><small>Leave blank if no further contact is needed.</small></span></div><label class="field"><span>Next follow-up date & time</span><input name="nextFollowUpAt" type="datetime-local" /></label><label class="field"><span>Contact type</span><select name="nextFollowUpType"><option>Call</option><option>Visit</option><option>Other</option></select></label></div>
+        <div class="form-message" id="completeMessage" role="alert"></div>
+        <div class="modal-actions"><button class="button button-quiet" data-close-modal="completeModal" type="button">Cancel</button><button class="button button-primary" type="submit">Save result <span>→</span></button></div>
+      </form>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
